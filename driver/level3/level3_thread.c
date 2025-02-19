@@ -547,7 +547,7 @@ static int gemm_driver(blas_arg_t *args, BLASLONG *range_m, BLASLONG
 
 #ifdef USE_OPENMP
   static omp_lock_t level3_lock, critical_section_lock;
-  static volatile BLASLONG init_lock = 0, omp_lock_initialized = 0,
+  static volatile BLASULONG init_lock = 0, omp_lock_initialized = 0,
                   parallel_section_left = MAX_PARALLEL_NUMBER;
 
   // Lock initialization; Todo : Maybe this part can be moved to blas_init() in blas_server_omp.c
@@ -742,7 +742,7 @@ static int gemm_driver(blas_arg_t *args, BLASLONG *range_m, BLASLONG
     num_parts  = 0;
     while (n > 0){
       width = blas_quickdivide(n + nthreads - num_parts - 1, nthreads - num_parts);
-      if (width < switch_ratio && width > 1) {
+      if (width < switch_ratio) {
         width = switch_ratio;
       }
       width = round_up(n, width, GEMM_PREFERED_SIZE);
